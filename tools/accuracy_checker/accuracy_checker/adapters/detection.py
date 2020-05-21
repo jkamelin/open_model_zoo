@@ -374,7 +374,8 @@ class SSDONNXAdapter(Adapter):
                 identifiers, raw_outputs[self.bboxes_out], raw_outputs[self.scores_out], raw_outputs[self.labels_out]
         ):
             x_mins, y_mins, x_maxs, y_maxs = bboxes.T
-            results.append(DetectionPrediction(identifier, labels, scores, x_mins, y_mins, x_maxs, y_maxs))
+            meta = {'image_info': frame_meta[0].get('image_info')}
+            results.append(DetectionPrediction(identifier, labels, scores, x_mins, y_mins, x_maxs, y_maxs, meta))
 
         return results
 
