@@ -863,3 +863,33 @@ class FaceDetectionRefinementAdapter(Adapter):
                 scores=detections['scores']
             )
         )
+
+
+class EfficientDetAdapter(Adapter):
+    __provider__ = 'efficientdet'
+    prediction_types = (DetectionPrediction, )
+
+    def process(self, raw, identifiers=None, frame_meta=None):
+        """
+        Args:
+            identifiers: list of input data identifiers
+            raw: output of model
+        Returns:
+            list of DetectionPrediction objects
+        """
+        prediction_batch = self._extract_predictions(raw, frame_meta)[self.output_blob]
+        result = []
+        for identifier, prediction, meta in zip(identifiers, prediction_batch, frame_meta):
+            y_mins, x_mins, y_maxs, x_maxs, scores, labels = prediction.T[1:]
+            labels = labels.astype(int)
+            mask = scores > 0.05
+            image_height, image_width, _ = meta.get('image_info')
+            original_height, original_width, _ = meta.get('image_size')
+            scale_x = original_width/image_width
+            scale_y = original_height/image_height
+            result.append(DetectionPrediction(
+                identifier, labels[mask], scores[mask], x_mins[mask]*scale_x,
+                y_mins[mask]*scale_y, x_maxs[mask]*scale_x, y_maxs[mask]*scale_y
+            ))
+
+        return result
