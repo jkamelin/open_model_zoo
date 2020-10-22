@@ -19,17 +19,31 @@ description: >-
   For details see repository <https://github.com/shepnerd/inpainting_gmcnn>.
 task_type: image_inpainting
 files:
-  - name: gmcnn-places2-tf.zip
-    size: 46187310
-    sha256: 18df63c6e244029691a4ad0d33760d92d346df71fe2c5cafe228d1c39e23eb3d
-    source: https://download.01.org/opencv/public_models/092020/gmcnn-places2-tf/gmcnn-places2-tf.zip
+  - name: network.py
+    size: 17472
+    sha256: 5de91a293d06fec40da627ca572c384c075badfb770d811bc2ac37c42213d86e
+    source: https://raw.githubusercontent.com/shepnerd/inpainting_gmcnn/bb60de0ce8822eea66873b4c3b93ebc160345fa5/tensorflow/net/network.py
+  - name: places2_512x680_freeform.zip
+    size: 166978959
+    sha256: 574c3944e44db11fc900803e725a37375bf7765fa97a94a7f810d2a494d07435
+    source:
+      $type: google_drive
+      id: 1aakVS0CPML_Qg-PuXGE1Xaql96hNEKOU
 postprocessing:
   - $type: unpack_archive
     format: zip
-    file: gmcnn-places2-tf.zip
+    file: places2_512x680_freeform.zip
+  - $type: regex_replace
+    file: network.py
+    pattern: 'from net\.ops'
+    replacement: '# \g<0>'
+  - $type: regex_replace
+    file: network.py
+    pattern: 'from util\.util'
+    replacement: '# \g<0>'
 
 model_optimizer_args:
-  - --input_model=$dl_dir/gmcnn-places2-tf/frozen_model.pb
+  - --input_model=$conv_dir/frozen_model.pb
   - --input_shape=[1,512,680,3],[1,512,680,1]
   - --input=Placeholder,Placeholder_1
   - --output=Minimum
