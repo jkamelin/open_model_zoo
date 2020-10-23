@@ -3,19 +3,8 @@
 ## Use Case and High-Level Description
 
 `resnet-50-tf` is a TensorFlow\* implementation of ResNet-50 - an image classification model
-pretrained on the ImageNet dataset. Originally redistributed in Saved model format,
-converted to frozen graph using `tf.graph_util` module.
-For details see [paper](https://arxiv.org/abs/1512.03385),
+pretrained on the ImageNet dataset. For details see [paper](https://arxiv.org/abs/1512.03385),
 [repository](https://github.com/tensorflow/models/tree/v2.2.0/official/r1/resnet).
-
-### Steps to Reproduce Conversion to Frozen Graph
-
-1. Install TensorFlow\*, version 1.14.0.
-2. Download [pretrained weights](http://download.tensorflow.org/models/official/20181001_resnet/savedmodels/resnet_v1_fp32_savedmodel_NHWC_jpg.tar.gz)
-3. Run example conversion code, available at [freeze_saved_model.py](./freeze_saved_model.py)
-```sh
-python3 freeze_saved_model.py --saved_model_dir path/to/downloaded/saved_model --save_file path/to/resulting/frozen_graph.pb
-```
 
 ## Example
 
